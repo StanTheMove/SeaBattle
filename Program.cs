@@ -11,7 +11,7 @@ namespace SeaBattle_Copy_paste____
         static void PlaceShips(int[,] board)
         {
             Random random = new Random();
-            int numShips = 3;
+            int numShips = 5;
 
             for (int i = 0; i < numShips; i++)
             {
@@ -29,33 +29,28 @@ namespace SeaBattle_Copy_paste____
         }
         static void DrawBoard(int[,] board)
         {
-            Console.Write("  ");
-            for (int i = 0; i < 10; i++)
+            Console.WriteLine("  " + string.Join(" ", Enumerable.Range(1, board.GetLength(1)).Select(i => i.ToString())));
+            for (int i = 0; i < board.GetLength(0); i++)
             {
-                Console.Write(i + " ");
-            }
-            Console.WriteLine();
-
-            for (int i = 0; i < 10; i++)
-            {
-                Console.Write(i + " ");
-                for (int j = 0; j < 10; j++)
+                Console.Write((i + 1).ToString().PadLeft(2) + " ");
+                for (int j = 0; j < board.GetLength(1); j++)
                 {
-                    if (board[i, j] == 0)
+                    switch (board[i, j])
                     {
-                        Console.Write(". ");
-                    }
-                    else if (board[i, j] == 1)
-                    {
-                        Console.Write("S ");
-                    }
-                    else if (board[i, j] == 2)
-                    {
-                        Console.Write("X ");
-                    }
-                    else if (board[i, j] == 3)
-                    {
-                        Console.Write("O ");
+                        case -2:
+                            Console.Write("X ");
+                            break;
+                        case -1:
+                            Console.Write(". ");
+                            break;
+                        case 0:
+                            Console.Write("~ ");
+                            break;
+                        case 1:
+                            Console.Write("O ");
+                            break;
+                        default:
+                            break;
                     }
                 }
                 Console.WriteLine();
@@ -101,7 +96,6 @@ namespace SeaBattle_Copy_paste____
         {
             Console.WriteLine("Computer's turn:");
 
-            // Згенеруйте випадкові координати для атаки.
             Random random = new Random();
             int x, y;
             do
@@ -110,7 +104,6 @@ namespace SeaBattle_Copy_paste____
                 y = random.Next(10);
             } while (playerBoard[x, y] == 2 || playerBoard[x, y] == 3);
 
-            // Обробіть атаку на вказаних координатах.
             if (playerBoard[x, y] == 1)
             {
                 Console.WriteLine($"Computer hit {Convert.ToChar(x + 65)}{y + 1}!");
@@ -121,14 +114,11 @@ namespace SeaBattle_Copy_paste____
                 Console.WriteLine($"Computer missed {Convert.ToChar(x + 65)}{y + 1}.");
                 playerBoard[x, y] = 3;
             }
-
-            // Зачекайте на введення користувачем будь-якої клавіші, щоб продовжити гру.
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey(true);
         }
         static bool IsWinner(int[,] board)
         {
-            // Перевірте, чи всі кораблі потоплені.
             for (int x = 0; x < 10; x++)
             {
                 for (int y = 0; y < 10; y++)
@@ -142,7 +132,7 @@ namespace SeaBattle_Copy_paste____
 
             return true;
         }
-        static void Main(string[] args)
+        static void StartGame()
         {
             int[,] playerBoard = new int[10, 10];
             int[,] computerBoard = new int[10, 10];
@@ -151,37 +141,30 @@ namespace SeaBattle_Copy_paste____
 
             while (true)
             {
-                // Виведіть поле бою.
                 Console.Clear();
                 Console.WriteLine("Your Board:");
                 DrawBoard(playerBoard);
                 Console.WriteLine("Computer's Board:");
                 DrawBoard(computerBoard);
-
-                // Обробіть хід користувача.
                 PlayerTurn(computerBoard);
-
-                // Перевірте, чи є переможець.
                 if (IsWinner(playerBoard))
                 {
                     Console.WriteLine("Congratulations, you won!");
                     break;
                 }
-
-                // Обробіть хід комп'ютера.
                 ComputerTurn(playerBoard);
-
-                // Перевірте, чи є переможець.
                 if (IsWinner(computerBoard))
                 {
                     Console.WriteLine("Sorry, you lost.");
                     break;
                 }
             }
-
-            // Завершіть гру.
             Console.WriteLine("Press any key to exit.");
             Console.ReadKey();
+        }
+        static void Main(string[] args)
+        {
+            StartGame();
         }
     }
 }
