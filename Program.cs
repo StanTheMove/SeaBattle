@@ -23,9 +23,6 @@ namespace SeaBattle_Copy_paste____
                         break;
                     case 2:
                         PlayComputerVsHuman();
-                        {
-
-                        }
                         break;
                     case 3:
                         PlayComputerVsComputer();
